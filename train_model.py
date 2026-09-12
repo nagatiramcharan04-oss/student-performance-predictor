@@ -29,3 +29,30 @@ X_test_scaled = scaler.transform(X_test)  # note: transform only, not fit_transf
 
 print("\nFirst row before scaling:", X_train.iloc[0].values)
 print("First row after scaling:", X_train_scaled[0])
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, classification_report
+
+# Train the model
+model = LogisticRegression(random_state=42)
+model.fit(X_train_scaled, y_train)
+
+# Predict on the unseen test set
+y_pred = model.predict(X_test_scaled)
+
+# Evaluate
+print("\n--- Model Performance ---")
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Precision:", precision_score(y_test, y_pred))
+print("Recall:", recall_score(y_test, y_pred))
+
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+print("\nFull report:")
+print(classification_report(y_test, y_pred))
+
+# Which features matter most to the model?
+print("\nFeature importance (coefficients):")
+for feature, coef in zip(X.columns, model.coef_[0]):
+    print(f"{feature}: {coef:.3f}")
